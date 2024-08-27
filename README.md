@@ -1,8 +1,8 @@
-Aphrodite - DreamPip's Content Management System
+# Aphrodite - DreamPip's Content Management System
 
 What: Payload CMS
 
-Getting Started
+## Getting Started
 ```
 nvm use v20
 npm ci

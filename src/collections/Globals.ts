@@ -29,19 +29,19 @@ const Globals: CollectionConfig = {
     	type: 'text'
     },
     {
-    	name: 'logo-dark',
+    	name: 'logoDark',
     	type: 'text'
     },
     {
-    	name: 'logo-light',
+    	name: 'logoLight',
     	type: 'text'
     },
     {
-    	name: 'logo-alt',
+    	name: 'logoAlt',
     	type: 'text'
     },
     {
-    	name: 'logo-sly',
+    	name: 'logoSly',
     	type: 'text'
     },
     {

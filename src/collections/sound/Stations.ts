@@ -4,7 +4,6 @@ import { MetaFields, ContentFields } from '../constants'
 
 const Stations: CollectionConfig = {
   slug: 'station',
-  auth: true,
   admin: {
     useAsTitle: 'metaTitle',
   },

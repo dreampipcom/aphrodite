@@ -4,7 +4,6 @@ import { MetaFields, ContentFields } from '../constants'
 
 const Albums: CollectionConfig = {
   slug: 'album',
-  auth: true,
   admin: {
     useAsTitle: 'metaTitle',
   },

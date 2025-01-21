@@ -4,7 +4,6 @@ import { MetaFields, ContentFields } from '../constants'
 
 const AudioSources: CollectionConfig = {
   slug: 'audio-source',
-  auth: true,
   admin: {
     useAsTitle: 'metaTitle',
   },

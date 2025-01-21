@@ -1,10 +1,11 @@
 import path from 'path'
+import { fileURLToPath } from 'url'
 
-import { payloadCloud } from '@payloadcms/plugin-cloud'
+import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
-import { webpackBundler } from '@payloadcms/bundler-webpack'
-import { slateEditor } from '@payloadcms/richtext-slate'
-import { buildConfig } from 'payload/config'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { buildConfig } from 'payload'
+import sharp from 'sharp'
 
 import Users from './collections/Users'
 
@@ -29,12 +30,18 @@ import Agendas from './collections/agenda/Agendas'
 import ContentBlockTypes from './collections/blocks/ContentBlockTypes'
 import ContentBlocks from './collections/blocks/ContentBlocks'
 
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
+
 export default buildConfig({
   admin: {
     user: Users.slug,
-    bundler: webpackBundler(),
+    importMap: {
+      baseDir: path.resolve(dirname),
+    },
   },
-  editor: slateEditor({}),
+  secret: process.env.PAYLOAD_SECRET || '',
+  editor: lexicalEditor({}),
   collections: [Users, Medias, Pages, Posts, Globals, BePublic, ContentBlockTypes, ContentBlocks, Calendars, Agendas, AudioSources, Tracks, Albums, Playlists, Episodes, Shows, Stations],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),
@@ -42,12 +49,17 @@ export default buildConfig({
   graphQL: {
     schemaOutputFile: path.resolve(__dirname, 'generated-schema.graphql'),
   },
-  plugins: [payloadCloud()],
+  plugins: [payloadCloudPlugin()],
   db: mongooseAdapter({
-    url: process.env.DATABASE_URI,
+    url: process.env.DATABASE_URI || '',
   }),
   localization: {
     locales: ['en', 'es', 'de'],
     defaultLocale: 'en',
   },
+  routes: {
+    admin: '/cms/admin',
+    api: '/cms/api',
+    graphQL: '/cms/graphql'
+  }
 })

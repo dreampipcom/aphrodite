@@ -3,7 +3,6 @@ import { MetaFields, ContentFields } from './constants'
 
 const Pages: CollectionConfig = {
   slug: 'page',
-  auth: true,
   admin: {
     useAsTitle: 'metaTitle',
   },

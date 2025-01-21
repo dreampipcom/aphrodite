@@ -4,7 +4,6 @@ import { MetaFields, ContentFields } from './constants'
 
 const BePublic: CollectionConfig = {
   slug: 'profile',
-  auth: true,
   admin: {
     useAsTitle: 'metaTitle',
   },

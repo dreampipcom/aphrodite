@@ -3,7 +3,6 @@ import { MetaFields, ContentFields } from './constants'
 
 const Posts: CollectionConfig = {
   slug: 'post',
-  auth: true,
   admin: {
     useAsTitle: 'metaTitle',
   },

@@ -2,7 +2,6 @@ import { CollectionConfig } from 'payload/types'
 
 const ContentBlocks: CollectionConfig = {
   slug: 'content-block',
-  auth: true,
   admin: {
     useAsTitle: 'name',
   },

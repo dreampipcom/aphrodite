@@ -2,9 +2,8 @@ import { CollectionConfig } from 'payload/types'
 
 const ContentBlockTypes: CollectionConfig = {
   slug: 'cb-type',
-  auth: true,
   admin: {
-    useAsTitle: 'name',
+    useAsTitle: 'type',
   },
   fields: [
     {

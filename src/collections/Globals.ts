@@ -3,7 +3,6 @@ import { MetaFields, ContentFields } from './constants'
 
 const Globals: CollectionConfig = {
   slug: 'global',
-  auth: true,
   admin: {
     useAsTitle: 'settingsName',
   },
@@ -26,23 +25,28 @@ const Globals: CollectionConfig = {
     },
     {
     	name: 'siteImage',
-    	type: 'text'
+    	type: 'relationship',
+    	relationTo: ['media']
     },
     {
     	name: 'logoDark',
-    	type: 'text'
+    	type: 'relationship',
+    	relationTo: ['media']
     },
     {
     	name: 'logoLight',
-    	type: 'text'
+    	type: 'relationship',
+    	relationTo: ['media']
     },
     {
     	name: 'logoAlt',
-    	type: 'text'
+    	type: 'relationship',
+    	relationTo: ['media']
     },
     {
     	name: 'logoSly',
-    	type: 'text'
+    	type: 'relationship',
+    	relationTo: ['media']
     },
     {
     	name: 'navData',

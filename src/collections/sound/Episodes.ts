@@ -4,7 +4,6 @@ import { MetaFields, ContentFields } from '../constants'
 
 const Episodes: CollectionConfig = {
   slug: 'episode',
-  auth: true,
   admin: {
     useAsTitle: 'metaTitle',
   },

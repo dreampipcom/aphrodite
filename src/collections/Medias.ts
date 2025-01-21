@@ -4,12 +4,14 @@ import { MetaFields, ContentFields } from './constants'
 const Medias: CollectionConfig = {
   slug: 'media',
   upload: true,
-  auth: true,
   admin: {
-    useAsTitle: 'metaTitle',
+    useAsTitle: 'alt',
   },
   fields: [
-    ...MetaFields,
+		{
+    	name: 'alt',
+    	type: 'text',
+    },
     {
     	name: 'contentfulId',
     	type: 'text',

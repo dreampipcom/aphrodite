@@ -4,7 +4,6 @@ import { MetaFields, ContentFields } from '../constants'
 
 const Tracks: CollectionConfig = {
   slug: 'track',
-  auth: true,
   admin: {
     useAsTitle: 'metaTitle',
   },

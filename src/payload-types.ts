@@ -8,21 +8,74 @@
 
 export interface Config {
   auth: {
-    users: UserAuthOperations;
+    user: UserAuthOperations;
+    calendar: CalendarAuthOperations;
+    agenda: AgendaAuthOperations;
   };
   collections: {
-    users: User;
+    user: User;
     media: Media;
+    page: Page;
+    post: Post;
+    global: Global;
+    profile: Profile;
+    'cb-type': CbType;
+    'content-block': ContentBlock;
+    calendar: Calendar;
+    agenda: Agenda;
+    'audio-source': AudioSource;
+    track: Track;
+    album: Album;
+    playlist: Playlist;
+    episode: Episode;
+    show: Show;
+    station: Station;
+    'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
+  };
+  collectionsJoins: {};
+  collectionsSelect: {
+    user: UserSelect<false> | UserSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    page: PageSelect<false> | PageSelect<true>;
+    post: PostSelect<false> | PostSelect<true>;
+    global: GlobalSelect<false> | GlobalSelect<true>;
+    profile: ProfileSelect<false> | ProfileSelect<true>;
+    'cb-type': CbTypeSelect<false> | CbTypeSelect<true>;
+    'content-block': ContentBlockSelect<false> | ContentBlockSelect<true>;
+    calendar: CalendarSelect<false> | CalendarSelect<true>;
+    agenda: AgendaSelect<false> | AgendaSelect<true>;
+    'audio-source': AudioSourceSelect<false> | AudioSourceSelect<true>;
+    track: TrackSelect<false> | TrackSelect<true>;
+    album: AlbumSelect<false> | AlbumSelect<true>;
+    playlist: PlaylistSelect<false> | PlaylistSelect<true>;
+    episode: EpisodeSelect<false> | EpisodeSelect<true>;
+    show: ShowSelect<false> | ShowSelect<true>;
+    station: StationSelect<false> | StationSelect<true>;
+    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
     defaultIDType: string;
   };
   globals: {};
-  locale: null;
-  user: User & {
-    collection: 'users';
+  globalsSelect: {};
+  locale: 'en' | 'es' | 'de';
+  user:
+    | (User & {
+        collection: 'user';
+      })
+    | (Calendar & {
+        collection: 'calendar';
+      })
+    | (Agenda & {
+        collection: 'agenda';
+      });
+  jobs: {
+    tasks: unknown;
+    workflows: unknown;
   };
 }
 export interface UserAuthOperations {
@@ -43,9 +96,45 @@ export interface UserAuthOperations {
     password: string;
   };
 }
+export interface CalendarAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
+  };
+}
+export interface AgendaAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
+  };
+}
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "user".
  */
 export interface User {
   id: string;
@@ -66,7 +155,8 @@ export interface User {
  */
 export interface Media {
   id: string;
-  alt: string;
+  alt?: string | null;
+  contentfulId?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -81,14 +171,902 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page".
+ */
+export interface Page {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?: {
+    relationTo: 'content-block';
+    value: string | ContentBlock;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "content-block".
+ */
+export interface ContentBlock {
+  id: string;
+  name?: string | null;
+  content?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  type?: {
+    relationTo: 'cb-type';
+    value: string | CbType;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cb-type".
+ */
+export interface CbType {
+  id: string;
+  type?: string | null;
+  settings?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  blocks?: {
+    relationTo: 'content-block';
+    value: string | ContentBlock;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "post".
+ */
+export interface Post {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?: {
+    relationTo: 'content-block';
+    value: string | ContentBlock;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "global".
+ */
+export interface Global {
+  id: string;
+  settingsName?: string | null;
+  siteName?: string | null;
+  siteTitle?: string | null;
+  siteDescription?: string | null;
+  siteImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  logoDark?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  logoLight?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  logoAlt?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  logoSly?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  navData?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  footerData?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "profile".
+ */
+export interface Profile {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?: {
+    relationTo: 'content-block';
+    value: string | ContentBlock;
+  } | null;
+  audioSource?: {
+    relationTo: 'audio-source';
+    value: string | AudioSource;
+  } | null;
+  tracks?: {
+    relationTo: 'track';
+    value: string | Track;
+  } | null;
+  albums?: {
+    relationTo: 'album';
+    value: string | Album;
+  } | null;
+  playlists?: {
+    relationTo: 'playlist';
+    value: string | Playlist;
+  } | null;
+  episodes?: {
+    relationTo: 'episode';
+    value: string | Episode;
+  } | null;
+  shows?: {
+    relationTo: 'show';
+    value: string | Show;
+  } | null;
+  stations?: {
+    relationTo: 'station';
+    value: string | Station;
+  } | null;
+  posts?: {
+    relationTo: 'post';
+    value: string | Post;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audio-source".
+ */
+export interface AudioSource {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  audioSource?: {
+    relationTo: 'audio-source';
+    value: string | AudioSource;
+  } | null;
+  tracks?: {
+    relationTo: 'track';
+    value: string | Track;
+  } | null;
+  albums?: {
+    relationTo: 'album';
+    value: string | Album;
+  } | null;
+  playlists?: {
+    relationTo: 'playlist';
+    value: string | Playlist;
+  } | null;
+  episodes?: {
+    relationTo: 'episode';
+    value: string | Episode;
+  } | null;
+  shows?: {
+    relationTo: 'show';
+    value: string | Show;
+  } | null;
+  stations?: {
+    relationTo: 'station';
+    value: string | Station;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "track".
+ */
+export interface Track {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?: {
+    relationTo: 'content-block';
+    value: string | ContentBlock;
+  } | null;
+  audioSource?: {
+    relationTo: 'audio-source';
+    value: string | AudioSource;
+  } | null;
+  tracks?: {
+    relationTo: 'track';
+    value: string | Track;
+  } | null;
+  albums?: {
+    relationTo: 'album';
+    value: string | Album;
+  } | null;
+  playlists?: {
+    relationTo: 'playlist';
+    value: string | Playlist;
+  } | null;
+  episodes?: {
+    relationTo: 'episode';
+    value: string | Episode;
+  } | null;
+  shows?: {
+    relationTo: 'show';
+    value: string | Show;
+  } | null;
+  stations?: {
+    relationTo: 'station';
+    value: string | Station;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "album".
+ */
+export interface Album {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?: {
+    relationTo: 'content-block';
+    value: string | ContentBlock;
+  } | null;
+  audioSource?: {
+    relationTo: 'audio-source';
+    value: string | AudioSource;
+  } | null;
+  tracks?: {
+    relationTo: 'track';
+    value: string | Track;
+  } | null;
+  albums?: {
+    relationTo: 'album';
+    value: string | Album;
+  } | null;
+  playlists?: {
+    relationTo: 'playlist';
+    value: string | Playlist;
+  } | null;
+  episodes?: {
+    relationTo: 'episode';
+    value: string | Episode;
+  } | null;
+  shows?: {
+    relationTo: 'show';
+    value: string | Show;
+  } | null;
+  stations?: {
+    relationTo: 'station';
+    value: string | Station;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "playlist".
+ */
+export interface Playlist {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?: {
+    relationTo: 'content-block';
+    value: string | ContentBlock;
+  } | null;
+  audioSource?: {
+    relationTo: 'audio-source';
+    value: string | AudioSource;
+  } | null;
+  tracks?: {
+    relationTo: 'track';
+    value: string | Track;
+  } | null;
+  albums?: {
+    relationTo: 'album';
+    value: string | Album;
+  } | null;
+  playlists?: {
+    relationTo: 'playlist';
+    value: string | Playlist;
+  } | null;
+  episodes?: {
+    relationTo: 'episode';
+    value: string | Episode;
+  } | null;
+  shows?: {
+    relationTo: 'show';
+    value: string | Show;
+  } | null;
+  stations?: {
+    relationTo: 'station';
+    value: string | Station;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "episode".
+ */
+export interface Episode {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?: {
+    relationTo: 'content-block';
+    value: string | ContentBlock;
+  } | null;
+  audioSource?: {
+    relationTo: 'audio-source';
+    value: string | AudioSource;
+  } | null;
+  tracks?: {
+    relationTo: 'track';
+    value: string | Track;
+  } | null;
+  albums?: {
+    relationTo: 'album';
+    value: string | Album;
+  } | null;
+  playlists?: {
+    relationTo: 'playlist';
+    value: string | Playlist;
+  } | null;
+  episodes?: {
+    relationTo: 'episode';
+    value: string | Episode;
+  } | null;
+  shows?: {
+    relationTo: 'show';
+    value: string | Show;
+  } | null;
+  stations?: {
+    relationTo: 'station';
+    value: string | Station;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "show".
+ */
+export interface Show {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?: {
+    relationTo: 'content-block';
+    value: string | ContentBlock;
+  } | null;
+  audioSource?: {
+    relationTo: 'audio-source';
+    value: string | AudioSource;
+  } | null;
+  tracks?: {
+    relationTo: 'track';
+    value: string | Track;
+  } | null;
+  albums?: {
+    relationTo: 'album';
+    value: string | Album;
+  } | null;
+  playlists?: {
+    relationTo: 'playlist';
+    value: string | Playlist;
+  } | null;
+  episodes?: {
+    relationTo: 'episode';
+    value: string | Episode;
+  } | null;
+  shows?: {
+    relationTo: 'show';
+    value: string | Show;
+  } | null;
+  stations?: {
+    relationTo: 'station';
+    value: string | Station;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "station".
+ */
+export interface Station {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?: {
+    relationTo: 'content-block';
+    value: string | ContentBlock;
+  } | null;
+  audioSource?: {
+    relationTo: 'audio-source';
+    value: string | AudioSource;
+  } | null;
+  tracks?: {
+    relationTo: 'track';
+    value: string | Track;
+  } | null;
+  albums?: {
+    relationTo: 'album';
+    value: string | Album;
+  } | null;
+  playlists?: {
+    relationTo: 'playlist';
+    value: string | Playlist;
+  } | null;
+  episodes?: {
+    relationTo: 'episode';
+    value: string | Episode;
+  } | null;
+  shows?: {
+    relationTo: 'show';
+    value: string | Show;
+  } | null;
+  stations?: {
+    relationTo: 'station';
+    value: string | Station;
+  } | null;
+  friendStations?: {
+    relationTo: 'station';
+    value: string | Station;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "calendar".
+ */
+export interface Calendar {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  nearCalendars?: {
+    relationTo: 'calendar';
+    value: string | Calendar;
+  } | null;
+  calendarUrl?: string | null;
+  calendarType?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "agenda".
+ */
+export interface Agenda {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?: {
+    relationTo: 'content-block';
+    value: string | ContentBlock;
+  } | null;
+  audioSource?: {
+    relationTo: 'audio-source';
+    value: string | AudioSource;
+  } | null;
+  tracks?: {
+    relationTo: 'track';
+    value: string | Track;
+  } | null;
+  albums?: {
+    relationTo: 'album';
+    value: string | Album;
+  } | null;
+  playlists?: {
+    relationTo: 'playlist';
+    value: string | Playlist;
+  } | null;
+  episodes?: {
+    relationTo: 'episode';
+    value: string | Episode;
+  } | null;
+  shows?: {
+    relationTo: 'show';
+    value: string | Show;
+  } | null;
+  stations?: {
+    relationTo: 'station';
+    value: string | Station;
+  } | null;
+  posts?: {
+    relationTo: 'post';
+    value: string | Post;
+  } | null;
+  calendars?: {
+    relationTo: 'calendar';
+    value: string | Calendar;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-locked-documents".
+ */
+export interface PayloadLockedDocument {
+  id: string;
+  document?:
+    | ({
+        relationTo: 'user';
+        value: string | User;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'page';
+        value: string | Page;
+      } | null)
+    | ({
+        relationTo: 'post';
+        value: string | Post;
+      } | null)
+    | ({
+        relationTo: 'global';
+        value: string | Global;
+      } | null)
+    | ({
+        relationTo: 'profile';
+        value: string | Profile;
+      } | null)
+    | ({
+        relationTo: 'cb-type';
+        value: string | CbType;
+      } | null)
+    | ({
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      } | null)
+    | ({
+        relationTo: 'calendar';
+        value: string | Calendar;
+      } | null)
+    | ({
+        relationTo: 'agenda';
+        value: string | Agenda;
+      } | null)
+    | ({
+        relationTo: 'audio-source';
+        value: string | AudioSource;
+      } | null)
+    | ({
+        relationTo: 'track';
+        value: string | Track;
+      } | null)
+    | ({
+        relationTo: 'album';
+        value: string | Album;
+      } | null)
+    | ({
+        relationTo: 'playlist';
+        value: string | Playlist;
+      } | null)
+    | ({
+        relationTo: 'episode';
+        value: string | Episode;
+      } | null)
+    | ({
+        relationTo: 'show';
+        value: string | Show;
+      } | null)
+    | ({
+        relationTo: 'station';
+        value: string | Station;
+      } | null);
+  globalSlug?: string | null;
+  user:
+    | {
+        relationTo: 'user';
+        value: string | User;
+      }
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }
+    | {
+        relationTo: 'agenda';
+        value: string | Agenda;
+      };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
   id: string;
-  user: {
-    relationTo: 'users';
-    value: string | User;
-  };
+  user:
+    | {
+        relationTo: 'user';
+        value: string | User;
+      }
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }
+    | {
+        relationTo: 'agenda';
+        value: string | Agenda;
+      };
   key?: string | null;
   value?:
     | {
@@ -112,6 +1090,399 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "user_select".
+ */
+export interface UserSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  contentfulId?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "page_select".
+ */
+export interface PageSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "post_select".
+ */
+export interface PostSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "global_select".
+ */
+export interface GlobalSelect<T extends boolean = true> {
+  settingsName?: T;
+  siteName?: T;
+  siteTitle?: T;
+  siteDescription?: T;
+  siteImage?: T;
+  logoDark?: T;
+  logoLight?: T;
+  logoAlt?: T;
+  logoSly?: T;
+  navData?: T;
+  footerData?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "profile_select".
+ */
+export interface ProfileSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  audioSource?: T;
+  tracks?: T;
+  albums?: T;
+  playlists?: T;
+  episodes?: T;
+  shows?: T;
+  stations?: T;
+  posts?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cb-type_select".
+ */
+export interface CbTypeSelect<T extends boolean = true> {
+  type?: T;
+  settings?: T;
+  blocks?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "content-block_select".
+ */
+export interface ContentBlockSelect<T extends boolean = true> {
+  name?: T;
+  content?: T;
+  type?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "calendar_select".
+ */
+export interface CalendarSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  nearCalendars?: T;
+  calendarUrl?: T;
+  calendarType?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "agenda_select".
+ */
+export interface AgendaSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  audioSource?: T;
+  tracks?: T;
+  albums?: T;
+  playlists?: T;
+  episodes?: T;
+  shows?: T;
+  stations?: T;
+  posts?: T;
+  calendars?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "audio-source_select".
+ */
+export interface AudioSourceSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  audioSource?: T;
+  tracks?: T;
+  albums?: T;
+  playlists?: T;
+  episodes?: T;
+  shows?: T;
+  stations?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "track_select".
+ */
+export interface TrackSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  audioSource?: T;
+  tracks?: T;
+  albums?: T;
+  playlists?: T;
+  episodes?: T;
+  shows?: T;
+  stations?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "album_select".
+ */
+export interface AlbumSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  audioSource?: T;
+  tracks?: T;
+  albums?: T;
+  playlists?: T;
+  episodes?: T;
+  shows?: T;
+  stations?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "playlist_select".
+ */
+export interface PlaylistSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  audioSource?: T;
+  tracks?: T;
+  albums?: T;
+  playlists?: T;
+  episodes?: T;
+  shows?: T;
+  stations?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "episode_select".
+ */
+export interface EpisodeSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  audioSource?: T;
+  tracks?: T;
+  albums?: T;
+  playlists?: T;
+  episodes?: T;
+  shows?: T;
+  stations?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "show_select".
+ */
+export interface ShowSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  audioSource?: T;
+  tracks?: T;
+  albums?: T;
+  playlists?: T;
+  episodes?: T;
+  shows?: T;
+  stations?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "station_select".
+ */
+export interface StationSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  audioSource?: T;
+  tracks?: T;
+  albums?: T;
+  playlists?: T;
+  episodes?: T;
+  shows?: T;
+  stations?: T;
+  friendStations?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-locked-documents_select".
+ */
+export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
+  document?: T;
+  globalSlug?: T;
+  user?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-preferences_select".
+ */
+export interface PayloadPreferencesSelect<T extends boolean = true> {
+  user?: T;
+  key?: T;
+  value?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-migrations_select".
+ */
+export interface PayloadMigrationsSelect<T extends boolean = true> {
+  name?: T;
+  batch?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

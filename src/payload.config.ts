@@ -44,10 +44,10 @@ export default buildConfig({
   editor: lexicalEditor({}),
   collections: [Users, Medias, Pages, Posts, Globals, BePublic, ContentBlockTypes, ContentBlocks, Calendars, Agendas, AudioSources, Tracks, Albums, Playlists, Episodes, Shows, Stations],
   typescript: {
-    outputFile: path.resolve(__dirname, 'payload-types.ts'),
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   graphQL: {
-    schemaOutputFile: path.resolve(__dirname, 'generated-schema.graphql'),
+    schemaOutputFile: path.resolve(dirname, 'generated-schema.graphql'),
   },
   plugins: [payloadCloudPlugin()],
   db: mongooseAdapter({

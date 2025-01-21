@@ -1,4 +1,5 @@
 import { CollectionConfig } from 'payload/types'
+import { TimeSpaceFields } from './agenda/constants'
 import { SoundFields } from './sound/constants'
 import { MetaFields, ContentFields } from './constants'
 
@@ -11,6 +12,7 @@ const BePublic: CollectionConfig = {
     ...MetaFields,
 		...ContentFields,
     ...SoundFields,
+    ...TimeSpaceFields,
     {
     	name: 'posts',
       type: 'relationship',

@@ -27,6 +27,8 @@ import BePublic from './collections/BePublic'
 import Calendars from './collections/agenda/Calendars'
 import Agendas from './collections/agenda/Agendas'
 import Events from './collections/agenda/Events'
+import Offers from './collections/agenda/Offers'
+import Spaces from './collections/agenda/Spaces'
 
 import ContentBlockTypes from './collections/blocks/ContentBlockTypes'
 import ContentBlocks from './collections/blocks/ContentBlocks'
@@ -43,7 +45,7 @@ export default buildConfig({
   },
   secret: process.env.PAYLOAD_SECRET || '',
   editor: lexicalEditor({}),
-  collections: [Users, Medias, Pages, Posts, Globals, BePublic, ContentBlockTypes, ContentBlocks, Calendars, Agendas, Events, AudioSources, Tracks, Albums, Playlists, Episodes, Shows, Stations],
+  collections: [Users, Medias, Pages, Posts, Globals, BePublic, ContentBlockTypes, ContentBlocks, Calendars, Agendas, Events, Offers, Spaces, AudioSources, Tracks, Albums, Playlists, Episodes, Shows, Stations],
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },

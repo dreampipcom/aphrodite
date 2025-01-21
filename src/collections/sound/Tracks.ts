@@ -1,6 +1,7 @@
 import { CollectionConfig } from 'payload/types'
 import { SoundFields } from './constants'
 import { MetaFields, ContentFields } from '../constants'
+import { TimeSpaceFields } from '../agenda/constants'
 
 const Tracks: CollectionConfig = {
   slug: 'track',
@@ -11,6 +12,7 @@ const Tracks: CollectionConfig = {
     ...MetaFields,
     ...ContentFields,
     ...SoundFields,
+    ...TimeSpaceFields,
   ],
 }
 

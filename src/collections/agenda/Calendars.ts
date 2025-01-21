@@ -9,6 +9,8 @@ const Calendars: CollectionConfig = {
   },
   fields: [
     ...MetaFields,
+    ...ContentFields,
+    ...SoundFields,
     {
       name: 'nearCalendars',
       type: 'relationship',
@@ -24,11 +26,7 @@ const Calendars: CollectionConfig = {
       type: 'text'
     },
     {
-      name: 'city',
-      type: 'text'
-    },
-    {
-      name: 'where',
+      name: 'position',
       type: 'point'
     },
     {

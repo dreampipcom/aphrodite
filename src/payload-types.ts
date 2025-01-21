@@ -22,6 +22,8 @@ export interface Config {
     calendar: Calendar;
     agenda: Agenda;
     event: Event;
+    offer: Offer;
+    space: Space;
     'audio-source': AudioSource;
     track: Track;
     album: Album;
@@ -46,6 +48,8 @@ export interface Config {
     calendar: CalendarSelect<false> | CalendarSelect<true>;
     agenda: AgendaSelect<false> | AgendaSelect<true>;
     event: EventSelect<false> | EventSelect<true>;
+    offer: OfferSelect<false> | OfferSelect<true>;
+    space: SpaceSelect<false> | SpaceSelect<true>;
     'audio-source': AudioSourceSelect<false> | AudioSourceSelect<true>;
     track: TrackSelect<false> | TrackSelect<true>;
     album: AlbumSelect<false> | AlbumSelect<true>;
@@ -194,6 +198,19 @@ export interface Page {
         value: string | ContentBlock;
       }[]
     | null;
+  calendars?:
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }[]
+    | null;
+  localTimezone?: string | null;
+  spaces?:
+    | {
+        relationTo: 'space';
+        value: string | Space;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -245,99 +262,9 @@ export interface CbType {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "post".
+ * via the `definition` "calendar".
  */
-export interface Post {
-  id: string;
-  metaTitle?: string | null;
-  metaDescription?: string | null;
-  metaImage?: {
-    relationTo: 'media';
-    value: string | Media;
-  } | null;
-  title?: string | null;
-  summary?: string | null;
-  videoWebp?: {
-    relationTo: 'media';
-    value: string | Media;
-  } | null;
-  videoMp4?: {
-    relationTo: 'media';
-    value: string | Media;
-  } | null;
-  gif?: {
-    relationTo: 'media';
-    value: string | Media;
-  } | null;
-  image?: {
-    relationTo: 'media';
-    value: string | Media;
-  } | null;
-  body?:
-    | {
-        relationTo: 'content-block';
-        value: string | ContentBlock;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "global".
- */
-export interface Global {
-  id: string;
-  settingsName?: string | null;
-  siteName?: string | null;
-  siteTitle?: string | null;
-  siteDescription?: string | null;
-  siteImage?: {
-    relationTo: 'media';
-    value: string | Media;
-  } | null;
-  logoDark?: {
-    relationTo: 'media';
-    value: string | Media;
-  } | null;
-  logoLight?: {
-    relationTo: 'media';
-    value: string | Media;
-  } | null;
-  logoAlt?: {
-    relationTo: 'media';
-    value: string | Media;
-  } | null;
-  logoSly?: {
-    relationTo: 'media';
-    value: string | Media;
-  } | null;
-  navData?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  footerData?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "profile".
- */
-export interface Profile {
+export interface Calendar {
   id: string;
   metaTitle?: string | null;
   metaDescription?: string | null;
@@ -411,10 +338,20 @@ export interface Profile {
         value: string | Station;
       }[]
     | null;
-  posts?: {
-    relationTo: 'post';
-    value: string | Post;
-  } | null;
+  nearCalendars?:
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }[]
+    | null;
+  calendarUrl?: string | null;
+  calendarType?: string | null;
+  /**
+   * @minItems 2
+   * @maxItems 2
+   */
+  position?: [number, number] | null;
+  zoom?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -551,6 +488,19 @@ export interface Track {
     | {
         relationTo: 'station';
         value: string | Station;
+      }[]
+    | null;
+  calendars?:
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }[]
+    | null;
+  localTimezone?: string | null;
+  spaces?:
+    | {
+        relationTo: 'space';
+        value: string | Space;
       }[]
     | null;
   updatedAt: string;
@@ -715,6 +665,19 @@ export interface Playlist {
         value: string | Station;
       }[]
     | null;
+  calendars?:
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }[]
+    | null;
+  localTimezone?: string | null;
+  spaces?:
+    | {
+        relationTo: 'space';
+        value: string | Space;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -794,6 +757,19 @@ export interface Episode {
     | {
         relationTo: 'station';
         value: string | Station;
+      }[]
+    | null;
+  calendars?:
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }[]
+    | null;
+  localTimezone?: string | null;
+  spaces?:
+    | {
+        relationTo: 'space';
+        value: string | Space;
       }[]
     | null;
   updatedAt: string;
@@ -877,6 +853,19 @@ export interface Show {
         value: string | Station;
       }[]
     | null;
+  calendars?:
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }[]
+    | null;
+  localTimezone?: string | null;
+  spaces?:
+    | {
+        relationTo: 'space';
+        value: string | Space;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -958,6 +947,19 @@ export interface Station {
         value: string | Station;
       }[]
     | null;
+  calendars?:
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }[]
+    | null;
+  localTimezone?: string | null;
+  spaces?:
+    | {
+        relationTo: 'space';
+        value: string | Space;
+      }[]
+    | null;
   friendStations?: {
     relationTo: 'station';
     value: string | Station;
@@ -967,9 +969,9 @@ export interface Station {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "calendar".
+ * via the `definition` "space".
  */
-export interface Calendar {
+export interface Space {
   id: string;
   metaTitle?: string | null;
   metaDescription?: string | null;
@@ -977,21 +979,245 @@ export interface Calendar {
     relationTo: 'media';
     value: string | Media;
   } | null;
-  nearCalendars?:
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
+  calendars?:
     | {
         relationTo: 'calendar';
         value: string | Calendar;
       }[]
     | null;
-  calendarUrl?: string | null;
-  calendarType?: string | null;
+  localTimezone?: string | null;
   city?: string | null;
+  country?: string | null;
   /**
    * @minItems 2
    * @maxItems 2
    */
-  where?: [number, number] | null;
-  zoom?: number | null;
+  position?: [number, number] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "post".
+ */
+export interface Post {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
+  calendars?:
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }[]
+    | null;
+  localTimezone?: string | null;
+  spaces?:
+    | {
+        relationTo: 'space';
+        value: string | Space;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "global".
+ */
+export interface Global {
+  id: string;
+  settingsName?: string | null;
+  siteName?: string | null;
+  siteTitle?: string | null;
+  siteDescription?: string | null;
+  siteImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  logoDark?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  logoLight?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  logoAlt?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  logoSly?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  navData?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  footerData?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "profile".
+ */
+export interface Profile {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
+  audioSource?:
+    | {
+        relationTo: 'audio-source';
+        value: string | AudioSource;
+      }[]
+    | null;
+  tracks?:
+    | {
+        relationTo: 'track';
+        value: string | Track;
+      }[]
+    | null;
+  albums?:
+    | {
+        relationTo: 'album';
+        value: string | Album;
+      }[]
+    | null;
+  playlists?:
+    | {
+        relationTo: 'playlist';
+        value: string | Playlist;
+      }[]
+    | null;
+  episodes?:
+    | {
+        relationTo: 'episode';
+        value: string | Episode;
+      }[]
+    | null;
+  shows?:
+    | {
+        relationTo: 'show';
+        value: string | Show;
+      }[]
+    | null;
+  stations?:
+    | {
+        relationTo: 'station';
+        value: string | Station;
+      }[]
+    | null;
+  calendars?:
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }[]
+    | null;
+  localTimezone?: string | null;
+  spaces?:
+    | {
+        relationTo: 'space';
+        value: string | Space;
+      }[]
+    | null;
+  posts?: {
+    relationTo: 'post';
+    value: string | Post;
+  } | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1126,9 +1352,21 @@ export interface Event {
         value: string | Calendar;
       }[]
     | null;
+  localTimezone?: string | null;
+  spaces?:
+    | {
+        relationTo: 'space';
+        value: string | Space;
+      }[]
+    | null;
   start?: string | null;
   end?: string | null;
-  localTimezone?: string | null;
+  offers?:
+    | {
+        relationTo: 'offer';
+        value: string | Offer;
+      }[]
+    | null;
   featuredEpisodes?:
     | {
         relationTo: 'episode';
@@ -1159,9 +1397,61 @@ export interface Event {
         value: string | Media;
       }[]
     | null;
-  ungatedTicket?: string | null;
-  listCta?: string | null;
-  listUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offer".
+ */
+export interface Offer {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
+  calendars?:
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }[]
+    | null;
+  localTimezone?: string | null;
+  spaces?:
+    | {
+        relationTo: 'space';
+        value: string | Space;
+      }[]
+    | null;
+  ungatedTicketUrl?: string | null;
+  guestlistCta?: string | null;
+  guestlistUrl?: string | null;
   ticketCta?: string | null;
   ticketUrl?: string | null;
   structuredData?:
@@ -1173,8 +1463,6 @@ export interface Event {
     | number
     | boolean
     | null;
-  city?: string | null;
-  country?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1228,6 +1516,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'event';
         value: string | Event;
+      } | null)
+    | ({
+        relationTo: 'offer';
+        value: string | Offer;
+      } | null)
+    | ({
+        relationTo: 'space';
+        value: string | Space;
       } | null)
     | ({
         relationTo: 'audio-source';
@@ -1372,6 +1668,9 @@ export interface PageSelect<T extends boolean = true> {
   gif?: T;
   image?: T;
   body?: T;
+  calendars?: T;
+  localTimezone?: T;
+  spaces?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1390,6 +1689,9 @@ export interface PostSelect<T extends boolean = true> {
   gif?: T;
   image?: T;
   body?: T;
+  calendars?: T;
+  localTimezone?: T;
+  spaces?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1434,6 +1736,9 @@ export interface ProfileSelect<T extends boolean = true> {
   episodes?: T;
   shows?: T;
   stations?: T;
+  calendars?: T;
+  localTimezone?: T;
+  spaces?: T;
   posts?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1468,11 +1773,24 @@ export interface CalendarSelect<T extends boolean = true> {
   metaTitle?: T;
   metaDescription?: T;
   metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  audioSource?: T;
+  tracks?: T;
+  albums?: T;
+  playlists?: T;
+  episodes?: T;
+  shows?: T;
+  stations?: T;
   nearCalendars?: T;
   calendarUrl?: T;
   calendarType?: T;
-  city?: T;
-  where?: T;
+  position?: T;
   zoom?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1520,23 +1838,68 @@ export interface EventSelect<T extends boolean = true> {
   image?: T;
   body?: T;
   calendars?: T;
+  localTimezone?: T;
+  spaces?: T;
   start?: T;
   end?: T;
-  localTimezone?: T;
+  offers?: T;
   featuredEpisodes?: T;
   otherEpisodes?: T;
   artists?: T;
   photos?: T;
   pinnedPhotos?: T;
-  ungatedTicket?: T;
-  listCta?: T;
-  listUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "offer_select".
+ */
+export interface OfferSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  calendars?: T;
+  localTimezone?: T;
+  spaces?: T;
+  ungatedTicketUrl?: T;
+  guestlistCta?: T;
+  guestlistUrl?: T;
   ticketCta?: T;
   ticketUrl?: T;
   structuredData?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space_select".
+ */
+export interface SpaceSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  calendars?: T;
+  localTimezone?: T;
   city?: T;
   country?: T;
+  position?: T;
   hasLiveVideo?: T;
+  hasLiveAudio?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1580,6 +1943,9 @@ export interface TrackSelect<T extends boolean = true> {
   episodes?: T;
   shows?: T;
   stations?: T;
+  calendars?: T;
+  localTimezone?: T;
+  spaces?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1630,6 +1996,9 @@ export interface PlaylistSelect<T extends boolean = true> {
   episodes?: T;
   shows?: T;
   stations?: T;
+  calendars?: T;
+  localTimezone?: T;
+  spaces?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1655,6 +2024,9 @@ export interface EpisodeSelect<T extends boolean = true> {
   episodes?: T;
   shows?: T;
   stations?: T;
+  calendars?: T;
+  localTimezone?: T;
+  spaces?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1680,6 +2052,9 @@ export interface ShowSelect<T extends boolean = true> {
   episodes?: T;
   shows?: T;
   stations?: T;
+  calendars?: T;
+  localTimezone?: T;
+  spaces?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1705,6 +2080,9 @@ export interface StationSelect<T extends boolean = true> {
   episodes?: T;
   shows?: T;
   stations?: T;
+  calendars?: T;
+  localTimezone?: T;
+  spaces?: T;
   friendStations?: T;
   updatedAt?: T;
   createdAt?: T;

@@ -37,7 +37,7 @@ const allSourceCollections = Object.keys(collections)
 const allDestCollections = Object.values(collections)
 
 for (const sourceCollection of allSourceCollections) {
-	
+
 	for (const locale of allLocales) {
 
 		(async () => {
@@ -60,6 +60,27 @@ for (const sourceCollection of allSourceCollections) {
 				const description = entry.fields[`description${fieldLocale}`][contentfulLocale]
 
 				const body = entry.fields[`body${fieldLocale}`][contentfulLocale] || entry.fields[`content${fieldLocale}`][contentfulLocale] || entry.fields[`bioRich${fieldLocale}`][contentfulLocale]
+
+				// episodes (adaptiosDecoration)
+
+				// sound
+				// mixcloud -> audio-source
+				// artists + guests -> profiles<BePublic>[]
+				// show -> show
+
+				// genres? -> contexts[]
+				// featured? -> highlight<Boolean>
+
+				// content
+
+				// placeholder -> image
+				// video -> videoWebp
+				// videoMp4 -> videoMp4
+				// image ->  gif
+
+
+
+
 
 				const contentfulSlug = `./data/images.ctfassets.net/${process.env.CONTENTFUL_SPACEID}`
 

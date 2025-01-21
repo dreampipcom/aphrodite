@@ -1,6 +1,7 @@
 import { CollectionConfig } from 'payload/types'
 import { SoundFields } from '../sound/constants'
 import { MetaFields, ContentFields } from '../constants'
+import { TimeSpaceFields } from './constants'
 
 const Events: CollectionConfig = {
   slug: 'event',
@@ -10,12 +11,7 @@ const Events: CollectionConfig = {
   fields: [
     ...MetaFields,
     ...ContentFields,
-    {
-      name: 'calendars',
-      type: 'relationship',
-      hasMany: true,
-      relationTo: ['calendar']
-    },
+    ...TimeSpaceFields,
     {
       name: 'start',
       type: 'date'
@@ -25,8 +21,10 @@ const Events: CollectionConfig = {
       type: 'date'
     },
     {
-      name: 'localTimezone',
-      type: 'text'
+      name: 'offers',
+      type: 'relationship',
+      hasMany: true,
+      relationTo: ['offer']
     },
     {
       name: 'featuredEpisodes',
@@ -57,42 +55,6 @@ const Events: CollectionConfig = {
       type: 'relationship',
       hasMany: true,
       relationTo: ['media']
-    },
-    {
-      name: 'ungatedTicket',
-      type: 'text'
-    },
-    {
-      name: 'listCta',
-      type: 'text'
-    },
-    {
-      name: 'listUrl',
-      type: 'text'
-    },
-    {
-      name: 'ticketCta',
-      type: 'text'
-    },
-    {
-      name: 'ticketUrl',
-      type: 'text'
-    },
-    {
-      name: 'structuredData',
-      type: 'json'
-    },
-    {
-      name: 'city',
-      type: 'text'
-    },
-    {
-      name: 'country',
-      type: 'text'
-    },
-    {
-      name: 'hasLiveVideo',
-      type: 'boolean'
     },
   ],
 }

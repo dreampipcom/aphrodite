@@ -1,11 +1,13 @@
 export const MetaFields = [
 	  {
     	name: 'metaTitle',
-      type: 'text'
+      type: 'text',
+      localized: true,
     },
     {
     	name: 'metaDescription',
-      type: 'text'
+      type: 'text',
+      localized: true,
     },
     {
     	name: 'metaImage',
@@ -17,11 +19,13 @@ export const MetaFields = [
 export const ContentFields = [
 	  {
     	name: 'title',
-      type: 'text'
+      type: 'text',
+      localized: true,
     },
     {
     	name: 'summary',
-      type: 'text'
+      type: 'text',
+      localized: true,
     },
     {
     	name: 'videoWebp',
@@ -48,5 +52,6 @@ export const ContentFields = [
       type: 'relationship',
       relationTo: ['content-block'],
       hasMany: true,
+      localized: true,
     },
 ]

@@ -37,23 +37,29 @@ const allSourceCollections = Object.keys(collections)
 const allDestCollections = Object.values(collections)
 
 for (const sourceCollection of allSourceCollections) {
+	
 	for (const locale of allLocales) {
+
 		(async () => {
 			// init
 			const payload = await getPayload({ config })
 
 			for (const entry of exportData.entries) {
+
+				if (entry.sys.contentType.sys.id !== sourceCollection) continue
+
 				const fieldLocale = localeMap[locale]
 				const contentfulLocale = locale === 'it' ? 'it-IT' : 'en-US'
-				const assetId = asset.sys.id;
-				const assetTitle = asset.fields.title['en-US'];
+				const entryId = entry.sys.id;
+				const entryTitle = entry.fields.title['en-US'];
 
-				console.log('migrating entry: ', { assetId, contentfulLocale, assetTitle })
+				console.log('migrating entry: ', { entryId, contentfulLocale, entryTitle })
 
 				// to slate-js
-				const title = asset.fields[`title${fieldLocale}`][contentfulLocale]
-				const description = asset.fields[`description${fieldLocale}`][contentfulLocale]
-				const body = asset.fields[`body${fieldLocale}`][contentfulLocale] || asset.fields[`content${fieldLocale}`][contentfulLocale] || asset.fields[`bioRich${fieldLocale}`][contentfulLocale]
+				const title = entry.fields[`title${fieldLocale}`][contentfulLocale]
+				const description = entry.fields[`description${fieldLocale}`][contentfulLocale]
+
+				const body = entry.fields[`body${fieldLocale}`][contentfulLocale] || entry.fields[`content${fieldLocale}`][contentfulLocale] || entry.fields[`bioRich${fieldLocale}`][contentfulLocale]
 
 				const contentfulSlug = `./data/images.ctfassets.net/${process.env.CONTENTFUL_SPACEID}`
 
@@ -66,6 +72,13 @@ for (const sourceCollection of allSourceCollections) {
 					collection: collections[sourceCollection],
 					locale: fieldLocale,
 					fallbackLocale: false,
+					data: {
+						title,
+						metaTitle: title,
+						summary: description,
+						metaDescription: description,
+						body
+					}
 				})
 			}
 		})()

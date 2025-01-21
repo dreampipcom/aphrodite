@@ -9,7 +9,8 @@ export const MetaFields = [
     },
     {
     	name: 'metaImage',
-      type: 'text'
+      type: 'relationship',
+      relationTo: ['media'],
     },
 ]
 
@@ -24,19 +25,23 @@ export const ContentFields = [
     },
     {
     	name: 'videoWebp',
-      type: 'text'
+      type: 'relationship',
+      relationTo: ['media'],
     },
     {
     	name: 'videoMp4',
-      type: 'text'
+      type: 'relationship',
+      relationTo: ['media'],
     },
     {
     	name: 'gif',
-      type: 'text'
+      type: 'relationship',
+      relationTo: ['media'],
     },
     {
     	name: 'image',
-      type: 'text'
+      type: 'relationship',
+      relationTo: ['media'],
     },
     {
     	name: 'body',

@@ -10,6 +10,7 @@ import Users from './collections/Users'
 
 import Pages from './collections/Pages'
 import Posts from './collections/Posts'
+import Medias from './collections/Medias'
 import Globals from './collections/Globals'
 
 import Episodes from './collections/sound/Episodes'
@@ -34,7 +35,7 @@ export default buildConfig({
     bundler: webpackBundler(),
   },
   editor: slateEditor({}),
-  collections: [Users, Pages, Posts, Globals, BePublic, ContentBlockTypes, ContentBlocks, Calendars, Agendas, AudioSources, Tracks, Albums, Playlists, Episodes, Shows, Stations],
+  collections: [Users, Medias, Pages, Posts, Globals, BePublic, ContentBlockTypes, ContentBlocks, Calendars, Agendas, AudioSources, Tracks, Albums, Playlists, Episodes, Shows, Stations],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),
   },

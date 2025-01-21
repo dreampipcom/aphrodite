@@ -26,6 +26,7 @@ import BePublic from './collections/BePublic'
 
 import Calendars from './collections/agenda/Calendars'
 import Agendas from './collections/agenda/Agendas'
+import Events from './collections/agenda/Events'
 
 import ContentBlockTypes from './collections/blocks/ContentBlockTypes'
 import ContentBlocks from './collections/blocks/ContentBlocks'
@@ -42,7 +43,7 @@ export default buildConfig({
   },
   secret: process.env.PAYLOAD_SECRET || '',
   editor: lexicalEditor({}),
-  collections: [Users, Medias, Pages, Posts, Globals, BePublic, ContentBlockTypes, ContentBlocks, Calendars, Agendas, AudioSources, Tracks, Albums, Playlists, Episodes, Shows, Stations],
+  collections: [Users, Medias, Pages, Posts, Globals, BePublic, ContentBlockTypes, ContentBlocks, Calendars, Agendas, Events, AudioSources, Tracks, Albums, Playlists, Episodes, Shows, Stations],
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
@@ -54,8 +55,8 @@ export default buildConfig({
     url: process.env.DATABASE_URI || '',
   }),
   localization: {
-    locales: ['en', 'es', 'de'],
-    defaultLocale: 'en',
+    locales: ["en-us", "pt-br", "it-it", "de-de", "fr-fr", "es-es", "ro", "pl-pl", "cs-cz", "sv-se", "et-ee", "ja-jp", "ru-ru", "default"],
+    defaultLocale: "default",
   },
   routes: {
     admin: '/cms/admin',

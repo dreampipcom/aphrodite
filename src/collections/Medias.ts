@@ -3,7 +3,23 @@ import { MetaFields, ContentFields } from './constants'
 
 const Medias: CollectionConfig = {
   slug: 'media',
-  upload: true,
+  upload: {
+    adminThumbnail: 'small',
+    imageSizes: [
+      {
+        name: 'small',
+        fit: 'cover',
+        height: 300,
+        width: 900,
+      },
+      {
+        name: 'large',
+        fit: 'cover',
+        height: 600,
+        width: 1800,
+      }
+    ],
+  },
   admin: {
     useAsTitle: 'alt',
   },

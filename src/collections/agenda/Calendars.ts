@@ -4,7 +4,6 @@ import { MetaFields, ContentFields } from '../constants'
 
 const Calendars: CollectionConfig = {
   slug: 'calendar',
-  auth: true,
   admin: {
     useAsTitle: 'metaTitle',
   },
@@ -13,6 +12,7 @@ const Calendars: CollectionConfig = {
     {
       name: 'nearCalendars',
       type: 'relationship',
+      hasMany: true,
       relationTo: ['calendar']
     },
     {
@@ -22,6 +22,18 @@ const Calendars: CollectionConfig = {
     {
       name: 'calendarType',
       type: 'text'
+    },
+    {
+      name: 'city',
+      type: 'text'
+    },
+    {
+      name: 'where',
+      type: 'point'
+    },
+    {
+      name: 'zoom',
+      type: 'number'
     },
   ],
 }

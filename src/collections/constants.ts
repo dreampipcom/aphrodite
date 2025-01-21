@@ -47,5 +47,6 @@ export const ContentFields = [
     	name: 'body',
       type: 'relationship',
       relationTo: ['content-block'],
+      hasMany: true,
     },
 ]

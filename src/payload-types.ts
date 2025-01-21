@@ -9,8 +9,6 @@
 export interface Config {
   auth: {
     user: UserAuthOperations;
-    calendar: CalendarAuthOperations;
-    agenda: AgendaAuthOperations;
   };
   collections: {
     user: User;
@@ -23,6 +21,7 @@ export interface Config {
     'content-block': ContentBlock;
     calendar: Calendar;
     agenda: Agenda;
+    event: Event;
     'audio-source': AudioSource;
     track: Track;
     album: Album;
@@ -46,6 +45,7 @@ export interface Config {
     'content-block': ContentBlockSelect<false> | ContentBlockSelect<true>;
     calendar: CalendarSelect<false> | CalendarSelect<true>;
     agenda: AgendaSelect<false> | AgendaSelect<true>;
+    event: EventSelect<false> | EventSelect<true>;
     'audio-source': AudioSourceSelect<false> | AudioSourceSelect<true>;
     track: TrackSelect<false> | TrackSelect<true>;
     album: AlbumSelect<false> | AlbumSelect<true>;
@@ -62,59 +62,30 @@ export interface Config {
   };
   globals: {};
   globalsSelect: {};
-  locale: 'en' | 'es' | 'de';
-  user:
-    | (User & {
-        collection: 'user';
-      })
-    | (Calendar & {
-        collection: 'calendar';
-      })
-    | (Agenda & {
-        collection: 'agenda';
-      });
+  locale:
+    | 'en-us'
+    | 'pt-br'
+    | 'it-it'
+    | 'de-de'
+    | 'fr-fr'
+    | 'es-es'
+    | 'ro'
+    | 'pl-pl'
+    | 'cs-cz'
+    | 'sv-se'
+    | 'et-ee'
+    | 'ja-jp'
+    | 'ru-ru'
+    | 'default';
+  user: User & {
+    collection: 'user';
+  };
   jobs: {
     tasks: unknown;
     workflows: unknown;
   };
 }
 export interface UserAuthOperations {
-  forgotPassword: {
-    email: string;
-    password: string;
-  };
-  login: {
-    email: string;
-    password: string;
-  };
-  registerFirstUser: {
-    email: string;
-    password: string;
-  };
-  unlock: {
-    email: string;
-    password: string;
-  };
-}
-export interface CalendarAuthOperations {
-  forgotPassword: {
-    email: string;
-    password: string;
-  };
-  login: {
-    email: string;
-    password: string;
-  };
-  registerFirstUser: {
-    email: string;
-    password: string;
-  };
-  unlock: {
-    email: string;
-    password: string;
-  };
-}
-export interface AgendaAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -168,6 +139,24 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+  sizes?: {
+    small?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    large?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -199,10 +188,12 @@ export interface Page {
     relationTo: 'media';
     value: string | Media;
   } | null;
-  body?: {
-    relationTo: 'content-block';
-    value: string | ContentBlock;
-  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -282,10 +273,12 @@ export interface Post {
     relationTo: 'media';
     value: string | Media;
   } | null;
-  body?: {
-    relationTo: 'content-block';
-    value: string | ContentBlock;
-  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -370,38 +363,54 @@ export interface Profile {
     relationTo: 'media';
     value: string | Media;
   } | null;
-  body?: {
-    relationTo: 'content-block';
-    value: string | ContentBlock;
-  } | null;
-  audioSource?: {
-    relationTo: 'audio-source';
-    value: string | AudioSource;
-  } | null;
-  tracks?: {
-    relationTo: 'track';
-    value: string | Track;
-  } | null;
-  albums?: {
-    relationTo: 'album';
-    value: string | Album;
-  } | null;
-  playlists?: {
-    relationTo: 'playlist';
-    value: string | Playlist;
-  } | null;
-  episodes?: {
-    relationTo: 'episode';
-    value: string | Episode;
-  } | null;
-  shows?: {
-    relationTo: 'show';
-    value: string | Show;
-  } | null;
-  stations?: {
-    relationTo: 'station';
-    value: string | Station;
-  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
+  audioSource?:
+    | {
+        relationTo: 'audio-source';
+        value: string | AudioSource;
+      }[]
+    | null;
+  tracks?:
+    | {
+        relationTo: 'track';
+        value: string | Track;
+      }[]
+    | null;
+  albums?:
+    | {
+        relationTo: 'album';
+        value: string | Album;
+      }[]
+    | null;
+  playlists?:
+    | {
+        relationTo: 'playlist';
+        value: string | Playlist;
+      }[]
+    | null;
+  episodes?:
+    | {
+        relationTo: 'episode';
+        value: string | Episode;
+      }[]
+    | null;
+  shows?:
+    | {
+        relationTo: 'show';
+        value: string | Show;
+      }[]
+    | null;
+  stations?:
+    | {
+        relationTo: 'station';
+        value: string | Station;
+      }[]
+    | null;
   posts?: {
     relationTo: 'post';
     value: string | Post;
@@ -421,34 +430,48 @@ export interface AudioSource {
     relationTo: 'media';
     value: string | Media;
   } | null;
-  audioSource?: {
-    relationTo: 'audio-source';
-    value: string | AudioSource;
-  } | null;
-  tracks?: {
-    relationTo: 'track';
-    value: string | Track;
-  } | null;
-  albums?: {
-    relationTo: 'album';
-    value: string | Album;
-  } | null;
-  playlists?: {
-    relationTo: 'playlist';
-    value: string | Playlist;
-  } | null;
-  episodes?: {
-    relationTo: 'episode';
-    value: string | Episode;
-  } | null;
-  shows?: {
-    relationTo: 'show';
-    value: string | Show;
-  } | null;
-  stations?: {
-    relationTo: 'station';
-    value: string | Station;
-  } | null;
+  audioSource?:
+    | {
+        relationTo: 'audio-source';
+        value: string | AudioSource;
+      }[]
+    | null;
+  tracks?:
+    | {
+        relationTo: 'track';
+        value: string | Track;
+      }[]
+    | null;
+  albums?:
+    | {
+        relationTo: 'album';
+        value: string | Album;
+      }[]
+    | null;
+  playlists?:
+    | {
+        relationTo: 'playlist';
+        value: string | Playlist;
+      }[]
+    | null;
+  episodes?:
+    | {
+        relationTo: 'episode';
+        value: string | Episode;
+      }[]
+    | null;
+  shows?:
+    | {
+        relationTo: 'show';
+        value: string | Show;
+      }[]
+    | null;
+  stations?:
+    | {
+        relationTo: 'station';
+        value: string | Station;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -482,38 +505,54 @@ export interface Track {
     relationTo: 'media';
     value: string | Media;
   } | null;
-  body?: {
-    relationTo: 'content-block';
-    value: string | ContentBlock;
-  } | null;
-  audioSource?: {
-    relationTo: 'audio-source';
-    value: string | AudioSource;
-  } | null;
-  tracks?: {
-    relationTo: 'track';
-    value: string | Track;
-  } | null;
-  albums?: {
-    relationTo: 'album';
-    value: string | Album;
-  } | null;
-  playlists?: {
-    relationTo: 'playlist';
-    value: string | Playlist;
-  } | null;
-  episodes?: {
-    relationTo: 'episode';
-    value: string | Episode;
-  } | null;
-  shows?: {
-    relationTo: 'show';
-    value: string | Show;
-  } | null;
-  stations?: {
-    relationTo: 'station';
-    value: string | Station;
-  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
+  audioSource?:
+    | {
+        relationTo: 'audio-source';
+        value: string | AudioSource;
+      }[]
+    | null;
+  tracks?:
+    | {
+        relationTo: 'track';
+        value: string | Track;
+      }[]
+    | null;
+  albums?:
+    | {
+        relationTo: 'album';
+        value: string | Album;
+      }[]
+    | null;
+  playlists?:
+    | {
+        relationTo: 'playlist';
+        value: string | Playlist;
+      }[]
+    | null;
+  episodes?:
+    | {
+        relationTo: 'episode';
+        value: string | Episode;
+      }[]
+    | null;
+  shows?:
+    | {
+        relationTo: 'show';
+        value: string | Show;
+      }[]
+    | null;
+  stations?:
+    | {
+        relationTo: 'station';
+        value: string | Station;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -547,38 +586,54 @@ export interface Album {
     relationTo: 'media';
     value: string | Media;
   } | null;
-  body?: {
-    relationTo: 'content-block';
-    value: string | ContentBlock;
-  } | null;
-  audioSource?: {
-    relationTo: 'audio-source';
-    value: string | AudioSource;
-  } | null;
-  tracks?: {
-    relationTo: 'track';
-    value: string | Track;
-  } | null;
-  albums?: {
-    relationTo: 'album';
-    value: string | Album;
-  } | null;
-  playlists?: {
-    relationTo: 'playlist';
-    value: string | Playlist;
-  } | null;
-  episodes?: {
-    relationTo: 'episode';
-    value: string | Episode;
-  } | null;
-  shows?: {
-    relationTo: 'show';
-    value: string | Show;
-  } | null;
-  stations?: {
-    relationTo: 'station';
-    value: string | Station;
-  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
+  audioSource?:
+    | {
+        relationTo: 'audio-source';
+        value: string | AudioSource;
+      }[]
+    | null;
+  tracks?:
+    | {
+        relationTo: 'track';
+        value: string | Track;
+      }[]
+    | null;
+  albums?:
+    | {
+        relationTo: 'album';
+        value: string | Album;
+      }[]
+    | null;
+  playlists?:
+    | {
+        relationTo: 'playlist';
+        value: string | Playlist;
+      }[]
+    | null;
+  episodes?:
+    | {
+        relationTo: 'episode';
+        value: string | Episode;
+      }[]
+    | null;
+  shows?:
+    | {
+        relationTo: 'show';
+        value: string | Show;
+      }[]
+    | null;
+  stations?:
+    | {
+        relationTo: 'station';
+        value: string | Station;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -612,38 +667,54 @@ export interface Playlist {
     relationTo: 'media';
     value: string | Media;
   } | null;
-  body?: {
-    relationTo: 'content-block';
-    value: string | ContentBlock;
-  } | null;
-  audioSource?: {
-    relationTo: 'audio-source';
-    value: string | AudioSource;
-  } | null;
-  tracks?: {
-    relationTo: 'track';
-    value: string | Track;
-  } | null;
-  albums?: {
-    relationTo: 'album';
-    value: string | Album;
-  } | null;
-  playlists?: {
-    relationTo: 'playlist';
-    value: string | Playlist;
-  } | null;
-  episodes?: {
-    relationTo: 'episode';
-    value: string | Episode;
-  } | null;
-  shows?: {
-    relationTo: 'show';
-    value: string | Show;
-  } | null;
-  stations?: {
-    relationTo: 'station';
-    value: string | Station;
-  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
+  audioSource?:
+    | {
+        relationTo: 'audio-source';
+        value: string | AudioSource;
+      }[]
+    | null;
+  tracks?:
+    | {
+        relationTo: 'track';
+        value: string | Track;
+      }[]
+    | null;
+  albums?:
+    | {
+        relationTo: 'album';
+        value: string | Album;
+      }[]
+    | null;
+  playlists?:
+    | {
+        relationTo: 'playlist';
+        value: string | Playlist;
+      }[]
+    | null;
+  episodes?:
+    | {
+        relationTo: 'episode';
+        value: string | Episode;
+      }[]
+    | null;
+  shows?:
+    | {
+        relationTo: 'show';
+        value: string | Show;
+      }[]
+    | null;
+  stations?:
+    | {
+        relationTo: 'station';
+        value: string | Station;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -677,38 +748,54 @@ export interface Episode {
     relationTo: 'media';
     value: string | Media;
   } | null;
-  body?: {
-    relationTo: 'content-block';
-    value: string | ContentBlock;
-  } | null;
-  audioSource?: {
-    relationTo: 'audio-source';
-    value: string | AudioSource;
-  } | null;
-  tracks?: {
-    relationTo: 'track';
-    value: string | Track;
-  } | null;
-  albums?: {
-    relationTo: 'album';
-    value: string | Album;
-  } | null;
-  playlists?: {
-    relationTo: 'playlist';
-    value: string | Playlist;
-  } | null;
-  episodes?: {
-    relationTo: 'episode';
-    value: string | Episode;
-  } | null;
-  shows?: {
-    relationTo: 'show';
-    value: string | Show;
-  } | null;
-  stations?: {
-    relationTo: 'station';
-    value: string | Station;
-  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
+  audioSource?:
+    | {
+        relationTo: 'audio-source';
+        value: string | AudioSource;
+      }[]
+    | null;
+  tracks?:
+    | {
+        relationTo: 'track';
+        value: string | Track;
+      }[]
+    | null;
+  albums?:
+    | {
+        relationTo: 'album';
+        value: string | Album;
+      }[]
+    | null;
+  playlists?:
+    | {
+        relationTo: 'playlist';
+        value: string | Playlist;
+      }[]
+    | null;
+  episodes?:
+    | {
+        relationTo: 'episode';
+        value: string | Episode;
+      }[]
+    | null;
+  shows?:
+    | {
+        relationTo: 'show';
+        value: string | Show;
+      }[]
+    | null;
+  stations?:
+    | {
+        relationTo: 'station';
+        value: string | Station;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -742,38 +829,54 @@ export interface Show {
     relationTo: 'media';
     value: string | Media;
   } | null;
-  body?: {
-    relationTo: 'content-block';
-    value: string | ContentBlock;
-  } | null;
-  audioSource?: {
-    relationTo: 'audio-source';
-    value: string | AudioSource;
-  } | null;
-  tracks?: {
-    relationTo: 'track';
-    value: string | Track;
-  } | null;
-  albums?: {
-    relationTo: 'album';
-    value: string | Album;
-  } | null;
-  playlists?: {
-    relationTo: 'playlist';
-    value: string | Playlist;
-  } | null;
-  episodes?: {
-    relationTo: 'episode';
-    value: string | Episode;
-  } | null;
-  shows?: {
-    relationTo: 'show';
-    value: string | Show;
-  } | null;
-  stations?: {
-    relationTo: 'station';
-    value: string | Station;
-  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
+  audioSource?:
+    | {
+        relationTo: 'audio-source';
+        value: string | AudioSource;
+      }[]
+    | null;
+  tracks?:
+    | {
+        relationTo: 'track';
+        value: string | Track;
+      }[]
+    | null;
+  albums?:
+    | {
+        relationTo: 'album';
+        value: string | Album;
+      }[]
+    | null;
+  playlists?:
+    | {
+        relationTo: 'playlist';
+        value: string | Playlist;
+      }[]
+    | null;
+  episodes?:
+    | {
+        relationTo: 'episode';
+        value: string | Episode;
+      }[]
+    | null;
+  shows?:
+    | {
+        relationTo: 'show';
+        value: string | Show;
+      }[]
+    | null;
+  stations?:
+    | {
+        relationTo: 'station';
+        value: string | Station;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -807,38 +910,54 @@ export interface Station {
     relationTo: 'media';
     value: string | Media;
   } | null;
-  body?: {
-    relationTo: 'content-block';
-    value: string | ContentBlock;
-  } | null;
-  audioSource?: {
-    relationTo: 'audio-source';
-    value: string | AudioSource;
-  } | null;
-  tracks?: {
-    relationTo: 'track';
-    value: string | Track;
-  } | null;
-  albums?: {
-    relationTo: 'album';
-    value: string | Album;
-  } | null;
-  playlists?: {
-    relationTo: 'playlist';
-    value: string | Playlist;
-  } | null;
-  episodes?: {
-    relationTo: 'episode';
-    value: string | Episode;
-  } | null;
-  shows?: {
-    relationTo: 'show';
-    value: string | Show;
-  } | null;
-  stations?: {
-    relationTo: 'station';
-    value: string | Station;
-  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
+  audioSource?:
+    | {
+        relationTo: 'audio-source';
+        value: string | AudioSource;
+      }[]
+    | null;
+  tracks?:
+    | {
+        relationTo: 'track';
+        value: string | Track;
+      }[]
+    | null;
+  albums?:
+    | {
+        relationTo: 'album';
+        value: string | Album;
+      }[]
+    | null;
+  playlists?:
+    | {
+        relationTo: 'playlist';
+        value: string | Playlist;
+      }[]
+    | null;
+  episodes?:
+    | {
+        relationTo: 'episode';
+        value: string | Episode;
+      }[]
+    | null;
+  shows?:
+    | {
+        relationTo: 'show';
+        value: string | Show;
+      }[]
+    | null;
+  stations?:
+    | {
+        relationTo: 'station';
+        value: string | Station;
+      }[]
+    | null;
   friendStations?: {
     relationTo: 'station';
     value: string | Station;
@@ -858,22 +977,23 @@ export interface Calendar {
     relationTo: 'media';
     value: string | Media;
   } | null;
-  nearCalendars?: {
-    relationTo: 'calendar';
-    value: string | Calendar;
-  } | null;
+  nearCalendars?:
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }[]
+    | null;
   calendarUrl?: string | null;
   calendarType?: string | null;
+  city?: string | null;
+  /**
+   * @minItems 2
+   * @maxItems 2
+   */
+  where?: [number, number] | null;
+  zoom?: number | null;
   updatedAt: string;
   createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -905,38 +1025,54 @@ export interface Agenda {
     relationTo: 'media';
     value: string | Media;
   } | null;
-  body?: {
-    relationTo: 'content-block';
-    value: string | ContentBlock;
-  } | null;
-  audioSource?: {
-    relationTo: 'audio-source';
-    value: string | AudioSource;
-  } | null;
-  tracks?: {
-    relationTo: 'track';
-    value: string | Track;
-  } | null;
-  albums?: {
-    relationTo: 'album';
-    value: string | Album;
-  } | null;
-  playlists?: {
-    relationTo: 'playlist';
-    value: string | Playlist;
-  } | null;
-  episodes?: {
-    relationTo: 'episode';
-    value: string | Episode;
-  } | null;
-  shows?: {
-    relationTo: 'show';
-    value: string | Show;
-  } | null;
-  stations?: {
-    relationTo: 'station';
-    value: string | Station;
-  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
+  audioSource?:
+    | {
+        relationTo: 'audio-source';
+        value: string | AudioSource;
+      }[]
+    | null;
+  tracks?:
+    | {
+        relationTo: 'track';
+        value: string | Track;
+      }[]
+    | null;
+  albums?:
+    | {
+        relationTo: 'album';
+        value: string | Album;
+      }[]
+    | null;
+  playlists?:
+    | {
+        relationTo: 'playlist';
+        value: string | Playlist;
+      }[]
+    | null;
+  episodes?:
+    | {
+        relationTo: 'episode';
+        value: string | Episode;
+      }[]
+    | null;
+  shows?:
+    | {
+        relationTo: 'show';
+        value: string | Show;
+      }[]
+    | null;
+  stations?:
+    | {
+        relationTo: 'station';
+        value: string | Station;
+      }[]
+    | null;
   posts?: {
     relationTo: 'post';
     value: string | Post;
@@ -947,14 +1083,100 @@ export interface Agenda {
   } | null;
   updatedAt: string;
   createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event".
+ */
+export interface Event {
+  id: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaImage?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  title?: string | null;
+  summary?: string | null;
+  videoWebp?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  videoMp4?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  gif?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  image?: {
+    relationTo: 'media';
+    value: string | Media;
+  } | null;
+  body?:
+    | {
+        relationTo: 'content-block';
+        value: string | ContentBlock;
+      }[]
+    | null;
+  calendars?:
+    | {
+        relationTo: 'calendar';
+        value: string | Calendar;
+      }[]
+    | null;
+  start?: string | null;
+  end?: string | null;
+  localTimezone?: string | null;
+  featuredEpisodes?:
+    | {
+        relationTo: 'episode';
+        value: string | Episode;
+      }[]
+    | null;
+  otherEpisodes?:
+    | {
+        relationTo: 'episode';
+        value: string | Episode;
+      }[]
+    | null;
+  artists?:
+    | {
+        relationTo: 'profile';
+        value: string | Profile;
+      }[]
+    | null;
+  photos?:
+    | {
+        relationTo: 'media';
+        value: string | Media;
+      }[]
+    | null;
+  pinnedPhotos?:
+    | {
+        relationTo: 'media';
+        value: string | Media;
+      }[]
+    | null;
+  ungatedTicket?: string | null;
+  listCta?: string | null;
+  listUrl?: string | null;
+  ticketCta?: string | null;
+  ticketUrl?: string | null;
+  structuredData?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  city?: string | null;
+  country?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1004,6 +1226,10 @@ export interface PayloadLockedDocument {
         value: string | Agenda;
       } | null)
     | ({
+        relationTo: 'event';
+        value: string | Event;
+      } | null)
+    | ({
         relationTo: 'audio-source';
         value: string | AudioSource;
       } | null)
@@ -1032,19 +1258,10 @@ export interface PayloadLockedDocument {
         value: string | Station;
       } | null);
   globalSlug?: string | null;
-  user:
-    | {
-        relationTo: 'user';
-        value: string | User;
-      }
-    | {
-        relationTo: 'calendar';
-        value: string | Calendar;
-      }
-    | {
-        relationTo: 'agenda';
-        value: string | Agenda;
-      };
+  user: {
+    relationTo: 'user';
+    value: string | User;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1054,19 +1271,10 @@ export interface PayloadLockedDocument {
  */
 export interface PayloadPreference {
   id: string;
-  user:
-    | {
-        relationTo: 'user';
-        value: string | User;
-      }
-    | {
-        relationTo: 'calendar';
-        value: string | Calendar;
-      }
-    | {
-        relationTo: 'agenda';
-        value: string | Agenda;
-      };
+  user: {
+    relationTo: 'user';
+    value: string | User;
+  };
   key?: string | null;
   value?:
     | {
@@ -1124,6 +1332,30 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+  sizes?:
+    | T
+    | {
+        small?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        large?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1239,15 +1471,11 @@ export interface CalendarSelect<T extends boolean = true> {
   nearCalendars?: T;
   calendarUrl?: T;
   calendarType?: T;
+  city?: T;
+  where?: T;
+  zoom?: T;
   updatedAt?: T;
   createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1275,13 +1503,42 @@ export interface AgendaSelect<T extends boolean = true> {
   calendars?: T;
   updatedAt?: T;
   createdAt?: T;
-  email?: T;
-  resetPasswordToken?: T;
-  resetPasswordExpiration?: T;
-  salt?: T;
-  hash?: T;
-  loginAttempts?: T;
-  lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "event_select".
+ */
+export interface EventSelect<T extends boolean = true> {
+  metaTitle?: T;
+  metaDescription?: T;
+  metaImage?: T;
+  title?: T;
+  summary?: T;
+  videoWebp?: T;
+  videoMp4?: T;
+  gif?: T;
+  image?: T;
+  body?: T;
+  calendars?: T;
+  start?: T;
+  end?: T;
+  localTimezone?: T;
+  featuredEpisodes?: T;
+  otherEpisodes?: T;
+  artists?: T;
+  photos?: T;
+  pinnedPhotos?: T;
+  ungatedTicket?: T;
+  listCta?: T;
+  listUrl?: T;
+  ticketCta?: T;
+  ticketUrl?: T;
+  structuredData?: T;
+  city?: T;
+  country?: T;
+  hasLiveVideo?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

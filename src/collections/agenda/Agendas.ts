@@ -4,7 +4,6 @@ import { MetaFields, ContentFields } from '../constants'
 
 const Agendas: CollectionConfig = {
   slug: 'agenda',
-  auth: true,
   admin: {
     useAsTitle: 'metaTitle',
   },

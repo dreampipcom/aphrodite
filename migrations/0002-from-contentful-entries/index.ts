@@ -64,15 +64,8 @@ for (const sourceCollection of allSourceCollections) {
 
 				await payload.create({
 					collection: collections[sourceCollection],
-					file: {
-						data: buffer,
-						name: first,
-						size: buffer.length,
-					},
-					data: {
-						contentfulId: assetId,
-						alt: assetTitle || first
-					}
+					locale: fieldLocale,
+					fallbackLocale: false,
 				})
 			}
 		})()
